@@ -12,6 +12,9 @@ classdef intruder < handle
       currentDirection
       nextDirection
       graphicalHandler
+      criticalHandler
+      criticalRadius
+      
       defendersFound;
       halfDiagonalDistance
       behaviour %1 nash, 2 greedy, 3 Player.
@@ -40,21 +43,20 @@ classdef intruder < handle
             obj.obstacle_factor=obstacle;
             obj.speed=sp;
             obj.target=target;
-            
+            obj.criticalRadius=13;
         end
         
         function draw(obj)
             
             % plot robot with specified configuration
-            corner1=obj.currentPosition+2*obj.halfDiagonalDistance*[ cos(obj.currentDirection) sin(obj.currentDirection)];
+            corner1=obj.currentPosition+(obj.halfDiagonalDistance*5/3)*[ cos(obj.currentDirection) sin(obj.currentDirection)];
             corner2=obj.currentPosition+obj.halfDiagonalDistance*[ cos(obj.currentDirection+(2/3*pi)) sin(obj.currentDirection+(2/3*pi))];
             corner3=obj.currentPosition+obj.halfDiagonalDistance*[ cos(obj.currentDirection-(2/3*pi)) sin(obj.currentDirection-(2/3*pi))];
 
             % updating position of the robot 
 
             set(obj.graphicalHandler,{'XData'},{[corner1(1) corner2(1) corner3(1)  corner1(1)]},{'YData'},{[corner1(2);corner2(2);corner3(2);corner1(2)]});
- 
-            
+            set(obj.criticalHandler,{'Position'},{[obj.currentPosition-obj.criticalRadius, obj.criticalRadius*ones(1,2)*2 ]});            
         end
         
         function greedyMove(obj,world)

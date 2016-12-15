@@ -79,7 +79,7 @@ classdef enviroment < handle
                     disp('freccia sinistra: svolta a sinistra e avanza')
                     disp('freccia destra: svolta a destra e avanza')
                     rectangle('position',[obj.critAreas(obj.intruder.target,:)-obj.critArea_dim/2 obj.critArea_dim],'FaceColor',obj.colors(obj.intruder.target))%drawing target area
-                    text(obj.critAreas(obj.intruder.target,1),obj.critAreas(obj.intruder.target,2),'C'),
+                    text(obj.critAreas(obj.intruder.target,1),obj.critAreas(obj.intruder.target,2),'C');
                 else
                     for d=1:size(obj.critAreas,1)
                         rectangle('position',[obj.critAreas(d,:)-obj.critArea_dim/2 obj.critArea_dim],'FaceColor',obj.colors(d))%drawing target area
@@ -116,6 +116,9 @@ classdef enviroment < handle
                 %se non inizializzato l'oggetto grafico, viene
                 %inizializzato qui. 
                 obj.intruder.graphicalHandler=fill([0; 0; 0; 0; 0; 0 ],[0; 0; 0; 0; 0; 0 ], 'r');
+                if obj.intruder.behaviour ==3
+                   obj.intruder.criticalHandler=rectangle('position',[obj.intruder.currentPosition-obj.intruder.criticalRadius, obj.intruder.criticalRadius*ones(1,2)*2 ],'Curvature',[1 1],'edgecolor','r','LineStyle','-.');
+                end
                 hold on;
             end
             

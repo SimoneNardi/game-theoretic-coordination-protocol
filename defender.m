@@ -78,7 +78,7 @@ classdef defender < handle
         function draw(obj,world)
             
             % plot robot with specified configuration
-            corner1=obj.currentPosition+2*obj.halfDiagonalDistance*[ cos(obj.currentDirection) sin(obj.currentDirection)];
+            corner1=obj.currentPosition+5/3*obj.halfDiagonalDistance*[ cos(obj.currentDirection) sin(obj.currentDirection)];
             corner2=obj.currentPosition+obj.halfDiagonalDistance*[ cos(obj.currentDirection+(2/3*pi)) sin(obj.currentDirection+(2/3*pi))];
             corner3=obj.currentPosition+obj.halfDiagonalDistance*[ cos(obj.currentDirection-(2/3*pi)) sin(obj.currentDirection-(2/3*pi))];
 
