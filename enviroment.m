@@ -182,6 +182,19 @@ classdef enviroment < handle
 
         l_dist_intruder_critic = norm(obj.critAreas(obj.intruder.target,:) - obj.intruder.currentPosition);
         l_dist_intruder_safezone = norm(obj.safeZone - obj.intruder.currentPosition);
+        if (obj.intruder.behaviour==3)
+            for p=1:length(obj.defenders)
+                if norm(obj.defenders(p).currentPosition-obj.intruder.currentPosition) <= obj.intruder.criticalRadius
+                    exitStatus=2;
+                    return
+                end
+            end
+        end
+        
+        
+        
+        
+        
         if t>= 10000
             close all;
             exitStatus=-1;

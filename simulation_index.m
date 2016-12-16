@@ -63,7 +63,7 @@ map=1000; %dimensione dell'ambiente quadrato in pixel.
 
 speed_defensors= 8; %max speed
 speed_intruder= 2; %fixed speed
-formation_radius=40;
+formation_radius=30;
 
 actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
 
@@ -126,4 +126,7 @@ switch result
             h = msgbox('HAI VINTO: Hai raggiunto la zona critica');
         end 
         disp('SIMULAZIONE FALLITA: Intruso ha raggiunto la zona critica');
+    case 2
+        h = msgbox('HAI PERSO: Hai urtato un difensore');
+    
 end
