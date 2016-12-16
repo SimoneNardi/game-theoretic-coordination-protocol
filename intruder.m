@@ -43,7 +43,7 @@ classdef intruder < handle
             obj.obstacle_factor=obstacle;
             obj.speed=sp;
             obj.target=target;
-            obj.criticalRadius=13;
+            obj.criticalRadius=30;
         end
         
         function draw(obj)
@@ -145,16 +145,13 @@ classdef intruder < handle
             end
             
             if obj.behaviour==3
-              % controllo dell'utente.
-              
+              % controllo dell'utente.              
                 obj.key=0;
-
-                
               %attendo che venga premuto un tasto
                 while not(obj.key)
                     pause(0.3);
                 end
-              %eseguo la mossa
+              %lo assegno per la mossa successiva
               obj.nextPosition=obj.currentPosition+obj.speed*[cos(obj.currentDirection+obj.actions(obj.key) ) sin(obj.currentDirection+ obj.actions(obj.key))]; 
               obj.nextDirection=obj.currentDirection +obj.actions(obj.key);
               

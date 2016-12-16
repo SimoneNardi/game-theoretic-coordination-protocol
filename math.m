@@ -160,6 +160,7 @@ classdef math
         
         function [ dist, LM1,LM2,LM3,LM4, LM5, w ] = distance_point_arc( d,alpha,beta,center,point )
         %Calcolo la distanza da un punto a un arco
+        % d: raggio
         % alpha: angolo del versore che rappresenta il centro della barrira
         % beta: semi estensione della barrirea
         % center: centro barriera

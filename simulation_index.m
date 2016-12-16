@@ -14,7 +14,7 @@ if intruder_bheaviour ==3
     
 map=500; %dimensione dell'ambiente quadrato in pixel.
     
-formation_radius=30;
+formation_radius=50;
 
 gambit_output=0; %voglio che gambit mi mostri li equilibri e i payoff ad 
                  % ogni stadio del gioco.
@@ -24,7 +24,7 @@ speed_intruder= 10; %fixed speed
 
 actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
 
-obstacle_factor=2000;
+obstacle_factor=2500;
     
 
 comunication_radius=200;
@@ -63,7 +63,7 @@ map=1000; %dimensione dell'ambiente quadrato in pixel.
 
 speed_defensors= 8; %max speed
 speed_intruder= 2; %fixed speed
-formation_radius=50;
+formation_radius=40;
 
 actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
 

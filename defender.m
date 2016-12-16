@@ -86,6 +86,7 @@ classdef defender < handle
 
             set(obj.graphicalHandler,{'XData'},{[corner1(1) corner2(1) corner3(1)  corner1(1)]},{'YData'},{[corner1(2);corner2(2);corner3(2);corner1(2)]});
             set(obj.graphicalHandler,'FaceColor',world.colors(obj.hypothesis_index));
+            drawnow;
             
             set(obj.comunicationHandler,{'Position'},{[obj.currentPosition-obj.comunicationRadius, obj.comunicationRadius*ones(1,2)*2 ]});
             set(obj.detectionHandler,{'Position'},{[obj.currentPosition-obj.detectionRadius, obj.detectionRadius*ones(1,2)*2 ]});
@@ -193,13 +194,14 @@ classdef defender < handle
                 [obj.predictedPositions(c,:),obj.predictedDirections(c,:),obj.GTintruderPredictedMove(:,c)]=game_theory_solver.gamePayoff(2,obj.intruderFound,defesorsPlayers,world,world.critAreas(c,:));
             end
             
-            %eseguo la mia mossa in base al mio grado di fiducia 
+            %assegno la mia mossa successiva in base al mio grado di fiducia 
             obj.nextPosition=obj.predictedPositions(obj.hypothesis_index,:);
             obj.nextDirection=obj.predictedDirections(obj.hypothesis_index);
 
            %salvo la posizione attuale dell'intruso per utilizzarla
            %l'iterazione successiva.
            obj.intruderPreviousDirection=obj.intruderFound.currentDirection;
+           obj.hypothesis=world.critAreas(obj.hypothesis_index,:);
            
         end
         
@@ -207,6 +209,13 @@ classdef defender < handle
         function move(obj)                             
             obj.currentPosition=obj.nextPosition;
             obj.currentDirection=obj.nextDirection;
+            
+            %setto la velocità  
+            if ( obj.intruderDetected  )
+              
+                obj.setSpeed(); 
+                
+            end
         end
             
         function start(obj,world,game_theory_solver)
@@ -236,10 +245,7 @@ classdef defender < handle
             if ( obj.intruderDetected  )
                 
                 obj.chooseNextMove(world,game_theory_solver);
-                
-                %setto la velocità                
-                obj.setSpeed();             
-
+      
             end
 
         end %end start    
