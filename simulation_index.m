@@ -26,7 +26,7 @@ actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
 
 obstacle_factor=2500;
     
-
+identification_buffer=10;
 comunication_radius=200;
 detection_radius=150;
 
@@ -39,8 +39,8 @@ safeZone =[30,30; 250,100]; %[lato1,lato2; xpos,ypos] Safe zone è unica!
 
 obstacles=[10,0;100 250; 400 250]; %[raggio,0; xpos1,ypos1; xpos2,ypos2 ...]     ò  
  
-robot1=defender([200,250],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius);
-robot2=defender([300,250],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius);
+robot1=defender([200,250],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot2=defender([300,250],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
 
 %creo l'intruso
 intruder1=intruder([30,30],0,detection_radius,intruder_bheaviour,actions,obstacle_factor,speed_intruder,intruder_target);
@@ -68,6 +68,9 @@ formation_radius=30;
 actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
 
 obstacle_factor=2000;
+
+identification_buffer=100;
+
 comunication_radius=300;
 detection_radius=200;
 
@@ -84,13 +87,13 @@ safeZone =[60,60; 500,200]; %[lato1,lato2; xpos,ypos] Safe zone è unica!
 obstacles=[10,0;200 500; 800 500]; %[raggio,0; xpos1,ypos1; xpos2,ypos2 ...]    
  
 %creo i robot difensori nelle loro posizioni iniziali.
-robot1=defender([550,400],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius);
-robot2=defender([300,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius);
-robot3=defender([500,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius);
-robot4=defender([700,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius);
-robot5=defender([200,500],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius);
-robot6=defender([750,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius);
-robot7=defender([600,800],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius);
+robot1=defender([550,400],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot2=defender([300,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot3=defender([500,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot4=defender([700,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot5=defender([200,500],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot6=defender([750,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot7=defender([600,800],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
 
 %creo l'intruso
 intruder1=intruder([200,200],0,detection_radius,intruder_bheaviour,actions,obstacle_factor,speed_intruder,intruder_target);

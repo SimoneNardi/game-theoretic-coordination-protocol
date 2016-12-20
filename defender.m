@@ -47,6 +47,7 @@ classdef defender < handle
       GTintruderPredictedMove
       predictedPositions
       predictedDirections
+      buffer
 
       
 
@@ -54,7 +55,7 @@ classdef defender < handle
     end
     methods
 
-        function obj = defender(init_pos, init_dir, detect, comm,act,obstacle,sp,radius)
+        function obj = defender(init_pos, init_dir, detect, comm,act,obstacle,sp,radius,buffer)
             obj.currentPosition=init_pos;
             obj.nextPosition=init_pos;
             obj.currentDirection=init_dir;
@@ -72,7 +73,8 @@ classdef defender < handle
             obj.formationHalfExtension=pi/4;
             obj.formationRadius=radius;
             obj.hypothesis_index=1;
-            obj.barrierLandmarks=[0 0 0 0 0 ; 0 0 0 0 0];            
+            obj.barrierLandmarks=[0 0 0 0 0 ; 0 0 0 0 0];
+            obj.buffer=buffer;
         end
         
         function draw(obj,world)
@@ -164,14 +166,14 @@ classdef defender < handle
                 % all'iterazione precedente, in questo modo posso aggiornare il
                 % mio grado di fiducia sull'ipotesi attule.
                 
-                buffer=100;
+                
                 tot_occur=size(obj.occurrences,2);
                 new_occur=tot_occur+1;
                 for z=1:size(obj.GTintruderPredictedMove,2)
                     obj.occurrences(z,new_occur)=obj.GTintruderPredictedMove(intrudermove,z);
                 end
-                if tot_occur+1 > buffer
-                    window=obj.occurrences(:,tot_occur+2-buffer:end);
+                if tot_occur+1 > obj.buffer
+                    window=obj.occurrences(:,tot_occur+2-obj.buffer:end);
                 else
                     window= obj.occurrences;
                 end                

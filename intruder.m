@@ -105,13 +105,13 @@ classdef intruder < handle
               key=varargin{2}.Key;
               switch key
                   case 'rightarrow'
-                      disp('svolta a destra')
+                      %disp('svolta a destra')
                       obj.key=3;
                   case 'leftarrow'
-                      disp('svolta a sinistra')
+                      %disp('svolta a sinistra')
                       obj.key=2;
                   case 'uparrow'
-                      disp ('prosegui')
+                      %disp ('prosegui')
                       obj.key=1;
               end
         end
