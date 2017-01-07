@@ -1,70 +1,63 @@
 # Gambit module
 
-def Nash(numPlayersArray,PayoffArray):
+import gambit
+import random
+import array
+import decimal
+import scipy.io as sio
+import numpy as np
+
+Matlab_files=sio.loadmat('SU.mat')
+
+numpy_S=Matlab_files['S']
+numpy_U=Matlab_files['U_vector']
+
+numPlayersArray=numpy_S[0].tolist()
+PayoffArray=numpy_U[0].tolist()
+
+numPlayers= len (numPlayersArray)
+g = gambit.Game.new_table(numPlayersArray)
+
+
+t=0
+for profile in g.contingencies:
+	print profile,
+	for pl in range(numPlayers):
+		g[profile][pl]=decimal.Decimal(PayoffArray[t])
+		t=t+1			
+		if pl == numPlayers-1:
+			print g[profile][pl]
+		else:
+			print g[profile][pl],
+			
+					
+#solver = gambit.nash.ExternalEnumPureSolver()
+#solver = gambit.nash.ExternalSimpdivSolver()
+#solver = gambit.nash.ExternalIteratedPolymatrixSolver()	
+solver = gambit.nash.ExternalGlobalNewtonSolver()
+
+solutions = solver.solve(g)
+
+numEquilibriums = len(solutions)
+
+if (numEquilibriums >0):
 	
-	import gambit
-	import random
-	import array
-	import decimal
 	
-	numPlayers= len (numPlayersArray)
+	lenEquilibriums = len(solutions[0])
 	
-	g = gambit.Game.new_table(numPlayersArray)
-
-	t=0
-	for profile in g.contingencies:
-		print profile,
-		for pl in range(numPlayers):
-			g[profile][pl]=decimal.Decimal(PayoffArray[t])
-			t=t+1			
-			if pl == numPlayers-1:
-				print g[profile][pl]
-			else:
-				print g[profile][pl],
-				
-				
-	#solver = gambit.nash.ExternalEnumPureSolver()
-        solver = gambit.nash.ExternalGlobalNewtonSolver()
-	#solver = gambit.nash.ExternalSimpdivSolver()
-	#solver = gambit.nash.ExternalIteratedPolymatrixSolver()
-
-	solutions = solver.solve(g)
-
-	#Interni a Python
-	#solutions = gambit.nash.enumpure_solve(g)
-	#solutions = gambit.nash.gnm_solve(g)
-        #solutions = gambit.nash.simpdiv_solve(g)
-        #solutions = gambit.nash.ipa_solve(g)
+	nash_list=[]
+	for eq in range(numEquilibriums):
+		for item in range(lenEquilibriums):
+			nash_list.append(solutions[eq].__getitem__(item))
 	
-	print 'Solver:E GNS' 
+	equilibriums_python=np.array(nash_list)
 
-	
-	
+	sio.savemat('eq_python.mat', {'equilibriums_python':equilibriums_python})
+	print solutions
 
-	numEquilibriums = len(solutions)
-	
-	if (numEquilibriums >0):
-		
-		
-		lenEquilibriums = len(solutions[0])
-		# Matlab compatible array
-		NE = array.array('f')
+else:
+	equilibriums_python=np.array(0)
+	sio.savemat('eq_python.mat', {'equilibriums_python':equilibriums_python})
 
-		for eq in range(numEquilibriums):
-			for item in range(lenEquilibriums):
-				NE.append(solutions[eq].__getitem__(item))
-
-
-		#print 'numPlayersArray', numPlayersArray
-		#print 'Payoff array',PayoffArray
-		print 'number of equilibriums:',numEquilibriums
-		print solutions
-		#print 'Array for MATLAB', NE
-
-		return NE
-
-	else:
-		return False
 	
 
-	

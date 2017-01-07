@@ -61,8 +61,8 @@ else
 
 map=1000; %dimensione dell'ambiente quadrato in pixel.
 
-speed_defensors= 8; %max speed
-speed_intruder= 2; %fixed speed
+speed_defensors= 15; %max speed
+speed_intruder= 10; %fixed speed
 formation_radius=30;
 
 actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
@@ -97,7 +97,7 @@ robot7=defender([600,800],pi,detection_radius,comunication_radius,actions,obstac
 %creo l'intruso
 intruder1=intruder([500,400],0,detection_radius,intruder_bheaviour,actions,obstacle_factor,speed_intruder,intruder_target);
 
-%Chiamo le librerie di gambit
+%Risolutore teoria dei giochi
 gambit=gambit(gambit_output);
 
 %scelgo quali robot tra quelli creati devono essere presenti e li assegno
