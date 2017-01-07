@@ -19,7 +19,7 @@ classdef gambit < handle
         function obj=gambit(verboseOutput)
         
         if(verboseOutput)   
-            py.importlib.import_module('nashgambit_process');
+            py.importlib.import_module('nashgambit');
             obj.verbose=1;
         else
             py.importlib.import_module('nashgambitNoOutput');
@@ -123,11 +123,11 @@ classdef gambit < handle
  % ******************************************TROVO GLI EQUILIBRI*******************************           
             
                U_vector = fix(reshape(U',1,numStrat*numPlayers).*10^6);
-               save('U_stuck.mat','U_vector');
+               
                S=3*ones(1,numPlayers); %number of strategies of each player
             
                if obj.verbose
-                equilibriums_python=py.nashgambit_process.Nash(S,U_vector);
+                equilibriums_python=py.nashgambit.Nash(S,U_vector);
                else
                 equilibriums_python=py.nashgambitNoOutput.Nash(S,U_vector);
                end
