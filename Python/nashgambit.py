@@ -27,18 +27,19 @@ while True:
 
 	total_data=[]
 	while True:
-		 data = conn.recv(5120)
+		 data = conn.recv(25600)
 
 		 total_data.append(data)
 		 if data[-1:]=='t': break 
 
-
-	total_data[0]=total_data[0][:-1] 	
-
+	total_data=''.join(total_data)
+	#total_data[0]=total_data[0][:-1] 	
+	total_data=total_data[:-1]
 
 #********************************CREAZIONE GIOCO *********************************
 	print total_data
-	data_list=total_data[0].split(';')
+	#data_list=total_data[0].split(';')
+	data_list=total_data.split(';')
 	numPlayers=int(data_list[0])
 	payoff_list=data_list[1].split(',')
 	PayoffArray= map(int, payoff_list)
@@ -96,7 +97,7 @@ while True:
 
 	p = Process(target=f, args=(q,))
 	p.start()
-	p.join(0.1) #ci mette circa 0.0005
+	p.join(1) #ci mette circa 0.0005
 
 
 	if p.is_alive():

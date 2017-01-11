@@ -87,13 +87,10 @@ safeZone =[60,60; 800,200]; %[lato1,lato2; xpos,ypos] Safe zone è unica!
 obstacles=[10,0;200 500; 800 500]; %[raggio,0; xpos1,ypos1; xpos2,ypos2 ...]    
  
 %creo i robot difensori nelle loro posizioni iniziali.
-robot1=defender([300,500],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
-robot2=defender([700,600],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
-robot3=defender([500,200],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
-robot4=defender([700,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
-robot5=defender([200,500],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
-robot6=defender([750,700],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
-robot7=defender([600,800],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot1=defender([350,400],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot2=defender([700,400],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot3=defender([500,250],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
+robot4=defender([500,500],pi,detection_radius,comunication_radius,actions,obstacle_factor,speed_defensors,formation_radius,identification_buffer);
 %creo l'intruso
 intruder1=intruder([500,400],0,detection_radius,intruder_bheaviour,actions,obstacle_factor,speed_intruder,intruder_target);
 
@@ -102,7 +99,7 @@ gambit=gambit(gambit_output);
 
 %scelgo quali robot tra quelli creati devono essere presenti e li assegno
 %nell'ambiente.
-agentsArray={intruder1,robot1,robot2};
+agentsArray={intruder1,robot1,robot2,robot3,robot4};
 world=enviroment(map,criticalAreas,safeZone,obstacles,agentsArray,gambit);
 
 %posso scegliere se abilitare o meno il disegno

@@ -41,8 +41,10 @@ classdef gambit < handle
                 end
             end
             string=strcat(string,'t');
+            save('string.mat','string');
             t = tcpip('localhost', 50000);
-            t.OutputBufferSize = 5120;
+            t.OutputBufferSize = 25600;
+            t.InputBufferSize = 25600;
             fopen(t);
             fwrite(t, string);
 
@@ -56,10 +58,17 @@ classdef gambit < handle
 
             outputstring=char(data)';
             
-            if outputstring == 'n'
+            if (outputstring == 'n')
                 equilibriums=0;
+                display('no equilibriums');
+            
+            elseif (outputstring == 'f')
+                equilibriums=0;
+                display('failed calculus');
+                
             else
                 char_cell=strsplit(outputstring,',');
+                save('char_cell.mat','char_cell');
                 equilibriums= cellfun(@str2num,char_cell);                
             end
             
@@ -160,7 +169,7 @@ classdef gambit < handle
             
  % ******************************************TROVO GLI EQUILIBRI*******************************           
             
-               U_vector = fix(reshape(U',1,numStrat*numPlayers).*10^6);
+               U_vector = fix(reshape(U',1,numStrat*numPlayers).*10^4);
                
                S=3*ones(1,numPlayers); %number of strategies of each player
                
@@ -175,7 +184,7 @@ classdef gambit < handle
                
                if equilibriums == 0
 
-                 display('No equilibriums');
+                 
 
                  A= 0.5 * ones(3,numPlayers);
 
