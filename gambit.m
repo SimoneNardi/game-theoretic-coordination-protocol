@@ -15,7 +15,7 @@ classdef gambit < handle
         solvedGame_CritAreaHypothesis=[0,0];
     end
     
-    methods        
+    methods       
         function obj=gambit(verboseOutput)
         
         if(verboseOutput)   
@@ -25,6 +25,44 @@ classdef gambit < handle
             
             obj.verbose=0;
         end
+        end
+        
+        function equilibriums = TCP_IP_comm(obj,sendArray,numPlayers)
+            
+            
+            %arraydainviare=[-450,786,-759,296,-574,383,-186,876,626,645,-944,-725,-567,-585,440,-813,477,838,-851,557,414,-466,657,533];
+            string=num2str(numPlayers);
+            string=strcat(string,';');
+            for i=1:length(sendArray)
+                num=num2str(sendArray(i));
+                string= strcat(string,num);
+                if i< length(sendArray)
+                    string= strcat(string,',');
+                end
+            end
+            string=strcat(string,'t');
+            t = tcpip('localhost', 50000);
+            t.OutputBufferSize = 5120;
+            fopen(t);
+            fwrite(t, string);
+
+            while t.BytesAvailable == 0
+                 pause(0.01)
+            end
+            data = fread(t, t.BytesAvailable);
+            fclose(t);
+            delete(t);
+            clear t;
+
+            outputstring=char(data)';
+            
+            if outputstring == 'n'
+                equilibriums=0;
+            else
+                char_cell=strsplit(outputstring,',');
+                equilibriums= cellfun(@str2num,char_cell);                
+            end
+            
         end
         
         
@@ -126,25 +164,16 @@ classdef gambit < handle
                
                S=3*ones(1,numPlayers); %number of strategies of each player
                
-               save('SU.mat','U_vector','S');
             
                if obj.verbose
-                %equilibriums_python=py.nashgambit.Nash(S,U_vector);
-                system('timeout 1s python Python/nashgambit.py');
-               else
-                   
-                %equilibriums_python=py.nashgambitNoOutput.Nash(S,U_vector);
-               end
-               
-               while (~exist('eq_python.mat'))
-                   
-                sleep(0.01); % or whatever interval you desire
 
+               else
+                    
                end
-               load('eq_python.mat');
-               delete('eq_python.mat');
                
-               if equilibriums_python == 0
+               equilibriums=obj.TCP_IP_comm(U_vector,numPlayers);
+               
+               if equilibriums == 0
 
                  display('No equilibriums');
 
@@ -154,7 +183,8 @@ classdef gambit < handle
 
                else
                    %I must select one of the equilibriums 
-                   equilibriums=double(equilibriums_python);
+                   %equilibriums=double(equilibriums_python);
+
                    numEquilibriums = length(equilibriums)/(3*numPlayers);   
                    EqLen=numPlayers*3;
                    rank= zeros(1,numEquilibriums); %declaration
