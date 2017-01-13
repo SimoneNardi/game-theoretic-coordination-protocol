@@ -15,7 +15,7 @@ HOST = 'localhost'
 PORT = 50000
 player_actions= 3;
 
-#**********************************RICEZIONE DATI**********************************
+#**********************************Receiving Data**********************************
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
@@ -36,7 +36,7 @@ while True:
 	#total_data[0]=total_data[0][:-1] 	
 	total_data=total_data[:-1]
 
-#********************************CREAZIONE GIOCO *********************************
+#********************************Game Creation *********************************
 	print total_data
 	#data_list=total_data[0].split(';')
 	data_list=total_data.split(';')
@@ -59,24 +59,21 @@ while True:
 				print g[profile][pl],
 
 
-#*******************************SOLUZIONE DEL GIOCO********************************			
+#*******************************solving game********************************			
 
 
 	#solver = gambit.nash.ExternalEnumPureSolver()
 	#solver = gambit.nash.ExternalSimpdivSolver()
 	#solver = gambit.nash.ExternalIteratedPolymatrixSolver()	
 	solver = gambit.nash.ExternalGlobalNewtonSolver()
-
-	# Creo un lista della classe multiprocessing (globale)
+	#shared queue
 	q = Queue()
-
 
 	def f(q):
 		solutions = solver.solve(g)
 		numEquilibriums = len(solutions)
 
-		# Matlab compatible array
-		#NE = array.array('f')
+
 		NE=[]
 
 		if (numEquilibriums >0):
@@ -97,20 +94,21 @@ while True:
 
 	p = Process(target=f, args=(q,))
 	p.start()
-	p.join(1) #ci mette circa 0.0005
+	p.join(1) #0.0005s for a normal execution
 
 
 	if p.is_alive():
 		p.terminate()
-		print 'calcolo fallito'
+		print 'failed calculus'
 		send_data='f'
 
 	else:
 		NE = q.get()
 		if not NE:
 			send_data='n'
+			print 'no equilibriums'
 		else:
-			print 'lista da spedire', NE
+			#print 'lista da spedire', NE
 			send_data= map(str, NE)	
 
 #**********************************INVIO DATI*****************************************

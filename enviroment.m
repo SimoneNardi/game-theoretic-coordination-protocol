@@ -190,12 +190,9 @@ classdef enviroment < handle
                 end
             end
         end
+             
         
-        
-        
-        
-        
-        if t>= 10000
+        if t>= 3000
             close all;
             exitStatus=-1;
         end

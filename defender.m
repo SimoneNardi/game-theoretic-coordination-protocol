@@ -55,13 +55,13 @@ classdef defender < handle
     end
     methods
 
-        function obj = defender(init_pos, init_dir, detect, comm,act,obstacle,sp,radius,buffer)
+        function obj = defender(init_pos, init_dir, detect, comm,act,extension,obstacle,sp,radius,buffer)
             obj.currentPosition=init_pos;
             obj.nextPosition=init_pos;
             obj.currentDirection=init_dir;
             obj.nextDirection=init_dir;
             obj.graphicalHandler=-1;
-            obj.halfDiagonalDistance=7;
+            obj.halfDiagonalDistance=7;%  <----dimension robot
             obj.detectionRadius=detect;
             obj.comunicationRadius=comm;
             obj.speed=sp;
@@ -70,7 +70,7 @@ classdef defender < handle
             obj.defendersFound=defender.empty;
             obj.actions=act;
             obj.obstacle_factor=obstacle;
-            obj.formationHalfExtension=pi/4;
+            obj.formationHalfExtension=extension;
             obj.formationRadius=radius;
             obj.hypothesis_index=1;
             obj.barrierLandmarks=[0 0 0 0 0 ; 0 0 0 0 0];

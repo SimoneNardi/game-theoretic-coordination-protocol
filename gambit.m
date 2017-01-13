@@ -29,8 +29,7 @@ classdef gambit < handle
         
         function equilibriums = TCP_IP_comm(obj,sendArray,numPlayers)
             
-            
-            %arraydainviare=[-450,786,-759,296,-574,383,-186,876,626,645,-944,-725,-567,-585,440,-813,477,838,-851,557,414,-466,657,533];
+
             string=num2str(numPlayers);
             string=strcat(string,';');
             for i=1:length(sendArray)
@@ -41,7 +40,6 @@ classdef gambit < handle
                 end
             end
             string=strcat(string,'t');
-            save('string.mat','string');
             t = tcpip('localhost', 50000);
             t.OutputBufferSize = 25600;
             t.InputBufferSize = 25600;
@@ -68,7 +66,6 @@ classdef gambit < handle
                 
             else
                 char_cell=strsplit(outputstring,',');
-                save('char_cell.mat','char_cell');
                 equilibriums= cellfun(@str2num,char_cell);                
             end
             
@@ -124,18 +121,7 @@ classdef gambit < handle
                     predictedPosition(p,:)=players{p}.currentPosition+players{p}.speed*[cos(players{p}.currentDirection+ Sp(s,p) ) sin(players{p}.currentDirection+ Sp(s,p))];
 
                     end 
-% 
-%                     switch numPlayers
-%                         case 2
-%                             world.formationHalfExtension= pi/9;
-%                             world.formationHalfExtension= pi/8;
-%                         case 4
-%                             world.formationHalfExtension= pi/7;
-%                         case 5
-%                             world.formationHalfExtension= pi/2;
-%                         otherwise
-%                             world.formationHalfExtension= pi/9;
-%                     end
+
 
                     for p = 1:numPlayers
 
