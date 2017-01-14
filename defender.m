@@ -15,6 +15,7 @@ classdef defender < handle
       currentDirection
       nextDirection
       speed
+      speedMin;
       speedMax;
       actions
       
@@ -55,7 +56,7 @@ classdef defender < handle
     end
     methods
 
-        function obj = defender(init_pos, init_dir, detect, comm,act,extension,obstacle,sp,radius,buffer)
+        function obj = defender(init_pos, init_dir, detect, comm,act,extension,obstacle,sp,spmin,radius,buffer)
             obj.currentPosition=init_pos;
             obj.nextPosition=init_pos;
             obj.currentDirection=init_dir;
@@ -66,6 +67,7 @@ classdef defender < handle
             obj.comunicationRadius=comm;
             obj.speed=sp;
             obj.speedMax=sp;
+            obj.speedMin=spmin;
             obj.intruderDetected=0;
             obj.defendersFound=defender.empty;
             obj.actions=act;
@@ -140,7 +142,7 @@ classdef defender < handle
             obj.barrierLandmarks=[LM1(1) LM2(1) LM3(1)  LM4(1) LM5(1); LM1(2) LM2(2) LM3(2)  LM4(2) LM5(2)];
             
             if (l_dist_player_arc >=0) && (l_dist_player_arc <= (obj.detectionRadius/4))
-            obj.speed=((obj.speedMax-obj.intruderFound.speed)/(obj.detectionRadius/4))*l_dist_player_arc+obj.intruderFound.speed;
+            obj.speed=((obj.speedMax-obj.speedMin)/(obj.detectionRadius/4))*l_dist_player_arc+obj.speedMin;
             else 
                obj.speed=obj.speedMax; 
             end

@@ -228,13 +228,13 @@ classdef math
         
         if  (position_vector_angle > 0) && (position_vector_angle <= beta)
             
-            w = ((w_max-w_min)/beta)*position_vector_angle+w_min;
+            w = ((w_min-w_max)/beta)*position_vector_angle+w_max;
             
         elseif (position_vector_angle > beta) && (position_vector_angle < 2*beta)
             
-            w = ((w_min-w_max)/beta)*position_vector_angle-w_min+2*w_max;
+            w = (w_max-w_min)*((position_vector_angle-beta)/beta)+w_min;
         else
-            w = w_min;
+            w = w_max;
         end
         
         

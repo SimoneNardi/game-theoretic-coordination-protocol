@@ -9,8 +9,10 @@ map=1000; %dimensione dell'ambiente quadrato in pixel.
 
 repetitions=30;
 
-speed_defensors= 10; %max speed
-speed_intruder= [3 5 7 10]; %          <-------------
+
+speed_intruder= 5; %
+speed_defensors_max= 10; %max speed
+speed_defensor_min= [speed_intruder, speed_intruder+0.1, speed_intruder+0.3, speed_intruder+0.5]      %<-------------
 formation_radius=30;
 
 actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
@@ -31,13 +33,13 @@ safeZone =[60,60; 900,900]; %[lato1,lato2; xpos,ypos] Safe zone è unica!
 
 obstacles=[10,0;700 700]; %[raggio,0; xpos1,ypos1; xpos2,ypos2 ...]
 
-formation_extension=[pi/10 pi/7 pi/4 pi/2 pi];%          <-------------
+formation_extension=[pi/8 pi/6 pi/3 pi/2];%          <-------------
 
 %*****************************************************************************
 
 for p=1:4 %numbers of agents
     for of=1:length(obstacle_factor)
-        for sp=1:length(speed_intruder)
+        for sp=1:length(speed_defensor_min)
             for fe=1:length(formation_extension)
                 for rep=1:length(repetitions)
 
@@ -51,28 +53,28 @@ for p=1:4 %numbers of agents
     %nell'ambiente.
     switch p
         case 1
-            robot1=defender([500,500],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
+            robot1=defender([500,500],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
             agentsArray={intruder1,robot1};
         case 2
-            robot1=defender([500,500],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
-            robot2=defender([450,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
+            robot1=defender([500,500],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
+            robot2=defender([450,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
             agentsArray={intruder1,robot1,robot2};
         case 3
-            robot1=defender([500,500],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
-            robot2=defender([450,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
-            robot3=defender([550,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
+            robot1=defender([500,500],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
+            robot2=defender([450,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
+            robot3=defender([550,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
             agentsArray={intruder1,robot1,robot2,robot3};
         case 4
-            robot1=defender([500,500],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
-            robot2=defender([450,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
-            robot3=defender([550,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
-            robot4=defender([450,550],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors,formation_radius,identification_buffer);
+            robot1=defender([500,500],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
+            robot2=defender([450,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
+            robot3=defender([550,450],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
+            robot4=defender([450,550],pi,detection_radius,comunication_radius,actions,formation_extension(fe),obstacle_factor(of),speed_defensors_max,speed_defensors_min(sp),formation_radius,identification_buffer);
             agentsArray={intruder1,robot1,robot2,robot3,robot4};
     end
     world=enviroment(map,criticalAreas,safeZone,obstacles,agentsArray,gambit);
 
     %posso scegliere se abilitare o meno il disegno
-    %world.draw();
+    world.draw();
 
     %% esecuzione della simulazione
 

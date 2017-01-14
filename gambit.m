@@ -158,7 +158,7 @@ classdef gambit < handle
                U_vector = fix(reshape(U',1,numStrat*numPlayers).*10^4);
                
                S=3*ones(1,numPlayers); %number of strategies of each player
-               
+                
             
                if obj.verbose
 
