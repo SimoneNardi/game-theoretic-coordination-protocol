@@ -70,6 +70,7 @@ classdef enviroment < handle
                 intruder_handler=obj.intruder;
                 fig = figure('keypressfcn',@intruder_handler.key_pressed);
                 axis square 
+                %axis([-200 1200 -200 1200]);
                 rectangle('position',[3 3 obj.map-3 obj.map-3],'edgecolor','y', 'LineWidth',2) %drawing map borders
                 
                 
@@ -90,6 +91,7 @@ classdef enviroment < handle
                 end
              
                 for i = 1:size(obj.obstacles,1)
+                    rectangle('position',[obj.obstacles(i,:)-obj.obstaclesRadius-40, 2*(obj.obstaclesRadius+40)*ones(1,2)],'Curvature',[1 1],'FaceColor',[0.5 0.5 0.5]) % drawing obstacles
                     rectangle('position',[obj.obstacles(i,:)-obj.obstaclesRadius, 2*obj.obstaclesRadius*ones(1,2)],'Curvature',[1 1],'FaceColor','k') % drawing obstacles
                 end
 

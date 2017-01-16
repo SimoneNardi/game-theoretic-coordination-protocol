@@ -221,10 +221,10 @@ classdef math
         
         %calcolo la costante moltiplicativa della parte della funzione
         %costo adibita all'inseguimento della barriera, in modo tale che il
-        %al centro della barriera si guadagni il doppio w_max=2, e agli
-        %estremi normalmente w_min=1
-        w_max=2;
-        w_min=1;
+        %al centro della barriera si guadagni il doppio w_max=1, e agli
+        %estremi normalmente w_min=0
+        w_max=1;
+        w_min=0;
         
         if  (position_vector_angle > 0) && (position_vector_angle <= beta)
             

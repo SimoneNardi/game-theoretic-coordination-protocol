@@ -138,12 +138,12 @@ classdef gambit < handle
                         else
                             d=p-1;
                         end
-                        [l_dist_player_arc, ~, ~, ~, ~, ~, target_factor]=math.distance_point_arc(defensors(d).formationRadius,barrier_center_angle,defensors(d).formationHalfExtension,predictedPosition(1,:),predictedPosition(p,:));                
+                        [l_dist_player_arc, ~, ~, ~, ~, ~, barrier_gain]=math.distance_point_arc(defensors(d).formationRadius,barrier_center_angle,defensors(d).formationHalfExtension,predictedPosition(1,:),predictedPosition(p,:));                
 
                         if p==1
                             I(p)= - l_dist_player_critic-intruder.obstacle_factor*(1/l_min_dist_player_nearobs_otherplayer);
                         else
-                            I(p)= - target_factor*l_dist_player_arc-defensors(p-1).obstacle_factor*(1/l_min_dist_player_nearobs_otherplayer);
+                            I(p)= -defensors(p-1).obstacle_factor*(1/l_min_dist_player_nearobs_otherplayer)- l_dist_player_arc -defensors(p-1).barrier_factor*barrier_gain;
                         end
 
                         U(s,p)= I(p); 

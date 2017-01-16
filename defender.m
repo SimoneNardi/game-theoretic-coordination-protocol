@@ -38,6 +38,7 @@ classdef defender < handle
       safeZone
       formationRadius;
       formationHalfExtension;
+      barrier_factor;
       
         %identification
       occurrences
@@ -56,7 +57,7 @@ classdef defender < handle
     end
     methods
 
-        function obj = defender(init_pos, init_dir, detect, comm,act,extension,obstacle,sp,spmin,radius,buffer)
+        function obj = defender(init_pos, init_dir, detect, comm,act,extension,obstacle,barrier,sp,spmin,radius,buffer)
             obj.currentPosition=init_pos;
             obj.nextPosition=init_pos;
             obj.currentDirection=init_dir;
@@ -72,6 +73,7 @@ classdef defender < handle
             obj.defendersFound=defender.empty;
             obj.actions=act;
             obj.obstacle_factor=obstacle;
+            obj.barrier_factor=barrier;
             obj.formationHalfExtension=extension;
             obj.formationRadius=radius;
             obj.hypothesis_index=1;
@@ -96,7 +98,7 @@ classdef defender < handle
             set(obj.detectionHandler,{'Position'},{[obj.currentPosition-obj.detectionRadius, obj.detectionRadius*ones(1,2)*2 ]});
             
             % updating barrier if intruder detected.
-            if ( obj.intruderDetected  )
+            if ( obj.intruderDetected  ) %&& (obj.intruderFound.behaviour~=3)
             
                 set(obj.arcFormationHandler,{'XData'},{obj.barrierLandmarks(1,:)},{'YData'},{obj.barrierLandmarks(2,:)});
             
