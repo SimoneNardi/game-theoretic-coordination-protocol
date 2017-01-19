@@ -41,6 +41,7 @@ classdef defender < handle
       barrier_factor;
       
         %identification
+      identification %set on/off identification  
       occurrences
       hypothesis % quale zona critica sospetto sia quella che l'intruso ha 
                  % come target
@@ -57,7 +58,7 @@ classdef defender < handle
     end
     methods
 
-        function obj = defender(init_pos, init_dir, detect, comm,act,extension,obstacle,barrier,sp,spmin,radius,buffer)
+        function obj = defender(init_pos, init_dir, detect, comm,act,extension,obstacle,barrier,sp,spmin,radius,iden,buffer)
             obj.currentPosition=init_pos;
             obj.nextPosition=init_pos;
             obj.currentDirection=init_dir;
@@ -78,6 +79,7 @@ classdef defender < handle
             obj.formationRadius=radius;
             obj.hypothesis_index=1;
             obj.barrierLandmarks=[0 0 0 0 0 ; 0 0 0 0 0];
+            obj.identification=iden;
             obj.buffer=buffer;
         end
         
@@ -98,7 +100,7 @@ classdef defender < handle
             set(obj.detectionHandler,{'Position'},{[obj.currentPosition-obj.detectionRadius, obj.detectionRadius*ones(1,2)*2 ]});
             
             % updating barrier if intruder detected.
-            if ( obj.intruderDetected  ) %&& (obj.intruderFound.behaviour~=3)
+            if ( obj.intruderDetected  ) && (obj.intruderFound.behaviour~=3)
             
                 set(obj.arcFormationHandler,{'XData'},{obj.barrierLandmarks(1,:)},{'YData'},{obj.barrierLandmarks(2,:)});
             
@@ -153,62 +155,71 @@ classdef defender < handle
         end
         
         function chooseNextMove(obj,world,game_theory_solver)
+            
+            if obj.identification==1
         
-            if not(isempty(obj.intruderPreviousDirection ))
-                % A partire dal confronto della posizione precedente
-                % dell'intruso e di quella attuale deduco la sua mossa attuale.
+                if not(isempty(obj.intruderPreviousDirection ))
+                    % A partire dal confronto della posizione precedente
+                    % dell'intruso e di quella attuale deduco la sua mossa attuale.
 
-                if (obj.intruderFound.currentDirection == obj.intruderPreviousDirection )
-                     intrudermove=1;
-                elseif (obj.intruderFound.currentDirection == obj.intruderPreviousDirection+obj.actions(2))
-                     intrudermove=2;   
-                else 
-                     intrudermove=3;
+                    if (obj.intruderFound.currentDirection == obj.intruderPreviousDirection )
+                         intrudermove=1;
+                    elseif (obj.intruderFound.currentDirection == obj.intruderPreviousDirection+obj.actions(2))
+                         intrudermove=2;   
+                    else 
+                         intrudermove=3;
+                    end
+
+                    % Confronto la sua mossa attuale con quella fornita da gambit
+                    % all'iterazione precedente, in questo modo posso aggiornare il
+                    % mio grado di fiducia sull'ipotesi attule.
+
+
+                    tot_occur=size(obj.occurrences,2);
+                    new_occur=tot_occur+1;
+                    for z=1:size(obj.GTintruderPredictedMove,2)
+                        obj.occurrences(z,new_occur)=obj.GTintruderPredictedMove(intrudermove,z);
+                    end
+                    if tot_occur+1 > obj.buffer
+                        window=obj.occurrences(:,tot_occur+2-obj.buffer:end);
+                    else
+                        window= obj.occurrences;
+                    end                
+                    [confidence_percent,obj.hypothesis_index]=max(mean(window,2));
+
                 end
 
-                % Confronto la sua mossa attuale con quella fornita da gambit
-                % all'iterazione precedente, in questo modo posso aggiornare il
-                % mio grado di fiducia sull'ipotesi attule.
-                
-                
-                tot_occur=size(obj.occurrences,2);
-                new_occur=tot_occur+1;
-                for z=1:size(obj.GTintruderPredictedMove,2)
-                    obj.occurrences(z,new_occur)=obj.GTintruderPredictedMove(intrudermove,z);
-                end
-                if tot_occur+1 > obj.buffer
-                    window=obj.occurrences(:,tot_occur+2-obj.buffer:end);
+
+                % richiamo gambit per ogni zona critica            
+                if isempty(obj.defendersFound)
+                    defesorsPlayers=obj;
                 else
-                    window= obj.occurrences;
-                end                
-                [confidence_percent,obj.hypothesis_index]=max(mean(window,2));
-                
+                    defesorsPlayers=[obj,obj.defendersFound];
+                end
 
+                for c=1:size(world.critAreas,1)
+                    [obj.predictedPositions(c,:),obj.predictedDirections(c,:),obj.GTintruderPredictedMove(:,c)]=game_theory_solver.gamePayoff(2,obj.intruderFound,defesorsPlayers,world,world.critAreas(c,:));
+                end
 
-            end
-            
+                %assegno la mia mossa successiva in base al mio grado di fiducia 
+                obj.nextPosition=obj.predictedPositions(obj.hypothesis_index,:);
+                obj.nextDirection=obj.predictedDirections(obj.hypothesis_index);
 
-            
-            % richiamo gambit per ogni zona critica            
-            if isempty(obj.defendersFound)
-                defesorsPlayers=obj;
+               %salvo la posizione attuale dell'intruso per utilizzarla
+               %l'iterazione successiva.
+               obj.intruderPreviousDirection=obj.intruderFound.currentDirection;
+               obj.hypothesis=world.critAreas(obj.hypothesis_index,:);
             else
-                defesorsPlayers=[obj,obj.defendersFound];
-            end
-            
-            for c=1:size(world.critAreas,1)
-                [obj.predictedPositions(c,:),obj.predictedDirections(c,:),obj.GTintruderPredictedMove(:,c)]=game_theory_solver.gamePayoff(2,obj.intruderFound,defesorsPlayers,world,world.critAreas(c,:));
-            end
-            
-            %assegno la mia mossa successiva in base al mio grado di fiducia 
-            obj.nextPosition=obj.predictedPositions(obj.hypothesis_index,:);
-            obj.nextDirection=obj.predictedDirections(obj.hypothesis_index);
+                
+                if isempty(obj.defendersFound)
+                    defesorsPlayers=obj;
+                else
+                    defesorsPlayers=[obj,obj.defendersFound];
+                end
+                
+                [obj.nextPosition,obj.nextDirection,~]=game_theory_solver.gamePayoff(2,obj.intruderFound,defesorsPlayers,world,obj.hypothesis);
 
-           %salvo la posizione attuale dell'intruso per utilizzarla
-           %l'iterazione successiva.
-           obj.intruderPreviousDirection=obj.intruderFound.currentDirection;
-           obj.hypothesis=world.critAreas(obj.hypothesis_index,:);
-           
+            end
         end
         
         

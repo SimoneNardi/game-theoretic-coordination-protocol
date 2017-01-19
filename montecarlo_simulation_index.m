@@ -7,7 +7,7 @@ map=1000; %dimensione dell'ambiente quadrato in pixel.
 %************************************SCENARIO******************************
 %numero di giocatori variabile
 
-repetitions=1;
+repetitions=30;
 
 
 speed_intruder= 5; %
@@ -17,9 +17,9 @@ formation_radius=30;
 
 actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
 
-obstacle_factor=[2000 2500 3000 3500 4000];%          <-------------
-barrier_factor=5;
-
+obstacle_factor=[500 1000  3000 8000 10000];   %    <-------------
+barrier_factor=[1 10 50 1000 3000 8000];%
+identification=0; %identification on,off
 identification_buffer=100;% 
 
 comunication_radius=400;
@@ -43,9 +43,10 @@ formation_extension=pi/3;
 
 %*****************************************************************************
 
-for p=2:3 %numbers of agents
+for p=1:3 %numbers of agents
     for of=1:length(obstacle_factor)
-        for rep=1:length(repetitions)
+        for bar=1:length(barrier_factor)
+            for rep=1:length(repetitions)
 
     %creo l'intruso
     intruder1=intruder([50,500],0,detection_radius,intruder_bheaviour,actions,obstacle_factor(of),speed_intruder,intruder_target);
@@ -59,26 +60,26 @@ for p=2:3 %numbers of agents
         case 1
             
             posx=randi([map/2, map]);
-            posy=randi([0, map]);
-            robot1=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification_buffer);
+            posy=randi([floor(map/3), floor(map*2/3)]);
+            robot1=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor(bar),speed_defensors_max,speed_defensors_min,formation_radius,identification,identification_buffer);
             agentsArray={intruder1,robot1};
         case 2
             
             posx=randi([map/2, map]);
             posy=randi([map/2, map]);
-            robot1=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification_buffer);           
+            robot1=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor(bar),speed_defensors_max,speed_defensors_min,formation_radius,identification,identification_buffer);           
             posy=randi([0, map/2]);
-            robot2=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification_buffer);
+            robot2=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor(bar),speed_defensors_max,speed_defensors_min,formation_radius,identification,identification_buffer);
             agentsArray={intruder1,robot1,robot2};
         case 3
             
             posx=randi([map/2, map]);
             posy=randi([floor(map*2/3), map]);
-            robot1=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification_buffer);           
+            robot1=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor(bar),speed_defensors_max,speed_defensors_min,formation_radius,identification,identification_buffer);           
             posy=randi([floor(map/3), floor(map*2/3)]);
-            robot2=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification_buffer);            
+            robot2=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor(bar),speed_defensors_max,speed_defensors_min,formation_radius,identification,identification_buffer);            
             posy=randi([0, floor(map/3)]);
-            robot3=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification_buffer);
+            robot3=defender([posx,posy],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor(of),barrier_factor(bar),speed_defensors_max,speed_defensors_min,formation_radius,identification,identification_buffer);
             agentsArray={intruder1,robot1,robot2,robot3};
     end
     world=enviroment(map,criticalAreas,safeZone,obstacles,agentsArray,gambit);
@@ -107,8 +108,9 @@ for p=2:3 %numbers of agents
     results(p,of,rep)=res;
     
     
-    sprintf('stato simulazioni: %d/%d , %d/%d , %d/%d\n', p,3,of,length(obstacle_factor),rep,length(repetitions))
+    sprintf('stato simulazioni: %d/%d , %d/%d , %d/%d, %d/%d\n', p,3,of,length(obstacle_factor),bar,length(barrier_factor),rep,repetitions)
     
+            end
         end
     end
     save('simulation.mat','iterations','results');

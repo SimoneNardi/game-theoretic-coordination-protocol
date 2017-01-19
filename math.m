@@ -226,11 +226,11 @@ classdef math
         w_max=1;
         w_min=0;
         
-        if  (position_vector_angle > 0) && (position_vector_angle <= beta)
+        if  (position_vector_angle > 0) && (position_vector_angle <= beta) && (dist<=10)
             
             w = ((w_min-w_max)/beta)*position_vector_angle+w_max;
             
-        elseif (position_vector_angle > beta) && (position_vector_angle < 2*beta)
+        elseif (position_vector_angle > beta) && (position_vector_angle < 2*beta) && (dist<=10)
             
             w = (w_max-w_min)*((position_vector_angle-beta)/beta)+w_min;
         else
@@ -282,7 +282,6 @@ classdef math
             barrier_weight= l_dist_intruder_critic /(0.4*l_dist_intruder_safezone +l_dist_intruder_critic ); %0.4*
             barrier_center_angle= versore_S_angle*barrier_weight+(versore_S_angle+delta)*(1-barrier_weight);
             
-            %restituisco 5 punti della barriera per il disegno
             
             
             

@@ -3,7 +3,7 @@ classdef enviroment < handle
     %   tramite la classe enviroment si gestiscono tutti gli aspetti della
     %   simulazione, inoltre si occupa della rappresentazione grafica e
     %   e dell'aggiornamento di tutti gli elementi.
-    %V6
+    
     
     properties
         
@@ -72,6 +72,10 @@ classdef enviroment < handle
                 axis square 
                 %axis([-200 1200 -200 1200]);
                 rectangle('position',[3 3 obj.map-3 obj.map-3],'edgecolor','y', 'LineWidth',2) %drawing map borders
+                for d=1:size(obj.critAreas,1)
+                    rectangle('position',[obj.critAreas(d,:)-obj.critArea_dim/2 obj.critArea_dim],'FaceColor',obj.colors(d))%drawing target area
+                    text(obj.critAreas(d,1),obj.critAreas(d,2),'C'),
+                end 
                 
                 
                 if obj.intruder.behaviour ==3
@@ -79,19 +83,13 @@ classdef enviroment < handle
                     disp('freccia su: avanza lungo la direzione attuale')                
                     disp('freccia sinistra: svolta a sinistra e avanza')
                     disp('freccia destra: svolta a destra e avanza')
-                    rectangle('position',[obj.critAreas(obj.intruder.target,:)-obj.critArea_dim/2 obj.critArea_dim],'FaceColor',obj.colors(obj.intruder.target))%drawing target area
-                    text(obj.critAreas(obj.intruder.target,1),obj.critAreas(obj.intruder.target,2),'C');
                 else
-                    for d=1:size(obj.critAreas,1)
-                        rectangle('position',[obj.critAreas(d,:)-obj.critArea_dim/2 obj.critArea_dim],'FaceColor',obj.colors(d))%drawing target area
-                        text(obj.critAreas(d,1),obj.critAreas(d,2),'C'),
-                    end                   
+                  
                     rectangle('position',[obj.safeZone-obj.critArea_dim/2 obj.safeZone_dim],'FaceColor','g')%drawing target area
                     text(obj.safeZone(1),obj.safeZone(2),'S')                    
                 end
              
                 for i = 1:size(obj.obstacles,1)
-                    rectangle('position',[obj.obstacles(i,:)-obj.obstaclesRadius-40, 2*(obj.obstaclesRadius+40)*ones(1,2)],'Curvature',[1 1],'FaceColor',[0.5 0.5 0.5]) % drawing obstacles
                     rectangle('position',[obj.obstacles(i,:)-obj.obstaclesRadius, 2*obj.obstaclesRadius*ones(1,2)],'Curvature',[1 1],'FaceColor','k') % drawing obstacles
                 end
 

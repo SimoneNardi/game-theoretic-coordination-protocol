@@ -90,9 +90,11 @@ while True:
 		p.terminate()
 		print 'calculation failed'
 		send_data='f'
+		q.close()
 
 	else:
 		NE = q.get()
+		q.close()
 		if not NE:
 			send_data='n'
 			print 'no equilibriums'
