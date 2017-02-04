@@ -70,7 +70,8 @@ classdef enviroment < handle
                 intruder_handler=obj.intruder;
                 fig = figure('keypressfcn',@intruder_handler.key_pressed);
                 axis square 
-                %axis([-200 1200 -200 1200]);
+                axis([0 obj.map 0 obj.map]);
+                
                 rectangle('position',[3 3 obj.map-3 obj.map-3],'edgecolor','y', 'LineWidth',2) %drawing map borders
                 for d=1:size(obj.critAreas,1)
                     rectangle('position',[obj.critAreas(d,:)-obj.critArea_dim/2 obj.critArea_dim],'FaceColor',obj.colors(d))%drawing target area
@@ -104,9 +105,11 @@ classdef enviroment < handle
                     %se non inizializzato l'oggetto grafico, viene
                     %inizializzato qui.
                     obj.defenders(i).graphicalHandler=fill([0; 0; 0; 0; 0; 0 ],[0; 0; 0; 0; 0; 0 ], 'b');
+                    obj.defenders(i).arcFormationHandler = line([0; 0; 0; 0; 0 ],[0; 0; 0; 0; 0 ], 'color', 'black','LineWidth',1);
+                    if obj.intruder.behaviour~=3
                     obj.defenders(i).comunicationHandler=rectangle('position',[obj.defenders(i).currentPosition-obj.defenders(i).comunicationRadius, obj.defenders(i).comunicationRadius*ones(1,2)*2 ],'Curvature',[1 1],'edgecolor','k','LineStyle',':');
                     obj.defenders(i).detectionHandler=rectangle('position',[obj.defenders(i).currentPosition-obj.defenders(i).detectionRadius, obj.defenders(i).detectionRadius*ones(1,2)*2 ],'Curvature',[1 1],'edgecolor','r','LineStyle',':');
-                    obj.defenders(i).arcFormationHandler = line([0; 0; 0; 0; 0 ],[0; 0; 0; 0; 0 ], 'color', 'black','LineWidth',1);
+                    end
                 end
             obj.defenders(i).draw(obj);
             end
@@ -186,13 +189,14 @@ classdef enviroment < handle
             for p=1:length(obj.defenders)
                 if norm(obj.defenders(p).currentPosition-obj.intruder.currentPosition) <= obj.intruder.criticalRadius
                     exitStatus=2;
+                    close all;
                     return
                 end
             end
         end
              
         
-        if t>= 3000
+        if t>= 1000
             close all;
             exitStatus=-1;
         end

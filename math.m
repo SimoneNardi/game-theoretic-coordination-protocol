@@ -76,34 +76,6 @@ classdef math
         % Matlab File Exchange Author ID: 10584
         % email: samelinoa@gmail.com
 
-        % History
-        % 1.1 updated help text
-        % 2.0 new faster algorithm
-        % 3.0 (aug 2006) implemented very fast algorithm
-        % 3.1 (may 2007) Improved algorithm Roger Stafford pointed out that for some values, the floor
-        %   operation on floating points, according to the IEEE 754 standard, could return
-        %   erroneous values. His excellent solution was to add (1/2) to the values
-        %   of A.
-        % 3.2 (may 2007) changed help and error messages slightly
-        % 4.0 (may 2008) again a faster implementation, based on ALLCOMB, suggested on the
-        %   newsgroup comp.soft-sys.matlab on May 7th 2008 by "Helper". It was
-        %   pointed out that COMBN(V,N) equals ALLCOMB(V,V,V...) (V repeated N
-        %   times), ALLCMOB being faster. Actually version 4 is an improvement
-        %   over version 1 ...
-        % 4.1 (jan 2010) removed call to FLIPLR, using refered indexing N:-1:1
-        %   (is faster, suggestion of Jan Simon, jan 2010), removed REPMAT, and
-        %   let NDGRID handle this
-        % 4.2 (apr 2011) corrrectly return a column vector for N = 1 (error pointed
-        %    out by Wilson).
-        % 4.3 (apr 2013) make a reference to COMBNSUB
-        % 5.0 (may 2015) NAME CHANGED (COMBN -> PERMN) and updated description,
-        %   following comment by Stephen Obeldick that this function is misnamed
-        %   as it produces permutations with repetitions rather then combinations.
-        % 5.1 (may 2015) always calculate M via indices
-        % 6.0 (may 2015) merged the functionaly of permnsub (aka combnsub) and this
-        %   function
-        % 6.1 (may 2016) fixed spelling errors
-
         narginchk(2,3) ;
 
         if fix(N) ~= N || N < 0 || numel(N) ~= 1 ;

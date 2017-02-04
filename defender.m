@@ -64,6 +64,8 @@ classdef defender < handle
             obj.currentDirection=init_dir;
             obj.nextDirection=init_dir;
             obj.graphicalHandler=-1;
+            obj.detectionHandler=-1;
+            obj.comunicationHandler=-1;
             obj.halfDiagonalDistance=7;%  <----dimension robot
             obj.detectionRadius=detect;
             obj.comunicationRadius=comm;
@@ -95,10 +97,10 @@ classdef defender < handle
             set(obj.graphicalHandler,{'XData'},{[corner1(1) corner2(1) corner3(1)  corner1(1)]},{'YData'},{[corner1(2);corner2(2);corner3(2);corner1(2)]});
             set(obj.graphicalHandler,'FaceColor',world.colors(obj.hypothesis_index));
             drawnow;
-            
-            set(obj.comunicationHandler,{'Position'},{[obj.currentPosition-obj.comunicationRadius, obj.comunicationRadius*ones(1,2)*2 ]});
-            set(obj.detectionHandler,{'Position'},{[obj.currentPosition-obj.detectionRadius, obj.detectionRadius*ones(1,2)*2 ]});
-            
+            if obj.detectionHandler~=-1
+                set(obj.comunicationHandler,{'Position'},{[obj.currentPosition-obj.comunicationRadius, obj.comunicationRadius*ones(1,2)*2 ]});
+                set(obj.detectionHandler,{'Position'},{[obj.currentPosition-obj.detectionRadius, obj.detectionRadius*ones(1,2)*2 ]});
+            end
             % updating barrier if intruder detected.
             if ( obj.intruderDetected  ) && (obj.intruderFound.behaviour~=3)
             

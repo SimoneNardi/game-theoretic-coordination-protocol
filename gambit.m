@@ -95,7 +95,7 @@ classdef gambit < handle
                 players{i+1}=defensors(i); %cellarray dei giocatori
             end
             actions= intruder.actions;
-            %% risolvo il gioco se non Ã¨ giÃ  stato risolto            
+            %% risolvo il gioco se non è già  stato risolto            
             if not(gameSolved )
                 
                 

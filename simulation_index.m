@@ -1,14 +1,17 @@
-clear all;close all;clc;
+clear all;clc;
 %V6
 
 %% Dichiarazioni
+python_start='python Python/nashgambitNoOutput.py&';
+python_stop='pkill -9 -f nashgambitNoOutput.py';
 
-intruder_bheaviour=2; % 1: debug,segue la teoria dei giochi,
+
+intruder_bheaviour=3; % 1: DEBUG (intruso aderisce strategie Nash)
                       % 2: intruso autonomo persegue il suo obbiettivo 
                       % 3: intruso controllato da un giocatore
 
-
 %% Configurazione da gioco
+
 
 if intruder_bheaviour ==3
     
@@ -25,9 +28,10 @@ speed_defensors_min=speed_intruder;
 
 actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
 
-obstacle_factor=3000;
+obstacle_factor=2000;
 barrier_factor=5;
-    
+
+identification=1; %0 off 1 on   
 identification_buffer=10;
 comunication_radius=200;
 detection_radius=150;
@@ -41,9 +45,9 @@ intruder_target=1; % selezionare quale tra le zone critiche elecante sopra
 safeZone =[60,60; 400,100]; %[lato1,lato2; xpos,ypos] Safe zone è unica!
 
 obstacles=[10,0;200 200; 400 250]; %[raggio,0; xpos1,ypos1; xpos2,ypos2 ...]
- 
-robot1=defender([150,150],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor,barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification_buffer);
-robot2=defender([300,250],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor,barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification_buffer);
+robot1=defender([150,150],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor,barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification,identification_buffer);
+robot2=defender([300,250],pi,detection_radius,comunication_radius,actions,formation_extension,obstacle_factor,barrier_factor,speed_defensors_max,speed_defensors_min,formation_radius,identification,identification_buffer);
+
 
 %creo l'intruso
 intruder1=intruder([30,30],0,detection_radius,intruder_bheaviour,actions,obstacle_factor,speed_intruder,intruder_target);
@@ -70,9 +74,9 @@ formation_radius=30;
 
 actions = [0 pi/4 -pi/4]; %standard: pi/4, -pi/4
 
-obstacle_factor=2000;
+obstacle_factor=3000;
 barrier_factor=5;
-identification=0; %0 off 1 on
+identification=1; %0 off 1 on
 identification_buffer=100;
 
 comunication_radius=400;%300
@@ -107,31 +111,33 @@ gambit=gambit(gambit_output);
 %nell'ambiente.
 agentsArray={intruder1,robot1 robot2};
 world=enviroment(map,criticalAreas,safeZone,obstacles,agentsArray,gambit);
-
-%posso scegliere se abilitare o meno il disegno
 world.draw();
+
 end
 
 %% esecuzione della simulazione
-[iterations, result]= world.start();
+status = system(python_start);
+pause(0.1);
 
-switch result
-    case 1
-        if intruder_bheaviour==3
-            h = msgbox('mi dispiace, HAI PERSO!: sei stato scortato nella zona sicura');
-        end    
-        disp('SUCCESSO: Intruso è stato scortato nella zona sicura');
-    case -1
-        if intruder_bheaviour==3
-            h = msgbox('mi dispiace, HAI PERSO!: ci hai messo troppo tempo');
-        end 
-        disp('SIMULAZIONE FALLITA: Numero di cicli limite superato');
-    case 0
-        if intruder_bheaviour==3
-            h = msgbox('HAI VINTO: Hai raggiunto la zona critica');
-        end 
-        disp('SIMULAZIONE FALLITA: Intruso ha raggiunto la zona critica');
-    case 2
-        h = msgbox('HAI PERSO: Hai urtato un difensore');
-    
-end
+    [iterations, result]= world.start();
+    switch result
+        case 1
+            if intruder_bheaviour==3
+                h = msgbox('mi dispiace, HAI PERSO!: sei stato scortato nella zona sicura');
+            end    
+            disp('SUCCESSO: Intruso è stato scortato nella zona sicura');
+        case -1
+            if intruder_bheaviour==3
+                h = msgbox('mi dispiace, HAI PERSO!: ci hai messo troppo tempo');
+            end 
+            disp('SIMULAZIONE FALLITA: Numero di cicli limite superato');
+        case 0
+            if intruder_bheaviour==3
+                h = msgbox('HAI VINTO: Hai raggiunto la zona critica');
+            end 
+            disp('SIMULAZIONE FALLITA: Intruso ha raggiunto la zona critica');
+        case 2
+            h = msgbox('HAI PERSO: Hai urtato un difensore');
+
+    end
+status = system(python_stop);
